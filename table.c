@@ -1,11 +1,15 @@
 char	table_c_rcs_id [] =
-	"$Id: table.c,v 1.1 1998-08-10 23:43:10 hjp Exp $";
+	"$Id: table.c,v 1.2 2000-02-28 14:35:22 hjp Exp $";
 /*
  * Tabulate files.
  *
  *	$Log: table.c,v $
- *	Revision 1.1  1998-08-10 23:43:10  hjp
- *	Initial revision
+ *	Revision 1.2  2000-02-28 14:35:22  hjp
+ *	Added environment variable TABLE_DELIMITER
+ *
+ *	Revision 1.1.1.1  1998/08/10 23:43:10  hjp
+ *	CVS repository was lost. This seems to be version 1.7 from 1994
+ *	(probably with minor changes).
  *
  * Revision 1.7  1994/07/06  12:40:19  hjp
  * fixed bug with delimiters > 0x80
@@ -357,8 +361,13 @@ main (argc, argv)
 	char	**argv;
 {
 	FILE	*fp = 0;
+	char *s;
 	
 	cmnd = argv [0];
+
+	if ((s = getenv("TABLE_DELIMITER"))) {
+		delimiter = s[0];
+	}
 	
 	while (*++ argv) {
 		if (**argv == '-') {
