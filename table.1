@@ -1,0 +1,69 @@
+.\" $Id: table.1,v 1.1 1998-08-10 23:43:10 hjp Exp $
+.\" $Log: table.1,v $
+.\" Revision 1.1  1998-08-10 23:43:10  hjp
+.\" Initial revision
+.\"
+.\" Revision 1.3  1993/11/21  17:28:41  hjp
+.\" fixed a typo
+.\"
+.\" Revision 1.2  1993/06/02  20:44:46  hjp
+.\" description of -l and -w flags
+.\" restricions
+.\"
+.\"
+.TH TABLE 1
+.SH NAME
+table - tabulate files
+.SH SYNOPSIS
+.B table
+[
+.B -d
+.I delimiter
+] [
+.B -w
+.I width
+] [
+.B -l
+.I lineseparator
+] [
+.I file ...
+]
+.SH DESCRIPTION
+.B Table
+splits each line of its input files into fields seperated by a 
+.I delimiter
+(the tab character by default). It then deletes any leading or trailing whitespace
+from the fields and pads them with spaces so that all fields in one column
+have the same width and prints the formatted table to stdout.
+.PP
+The delimiter can be given as a single character or as a decimal, octal, or
+hexadecimal number (using C conventions).
+.PP
+If the resultant output line length is greater than 
+.I width
+(unlimited by default), each line is split into several physical output
+lines. To minimize the number of physical output lines per logical output
+line, the fields are reordered.
+.PP
+.I lineseparator
+(a null string by default) is printed after each logical line.
+.SH RESTRICTIONS
+.B Table
+stores all the input files in memory to determine the maximum width of each
+column before starting any output. Thus the size of files is limited by available
+memory.
+.PP
+The maximum size of a field and the maximum number of fields per line
+are restricted. By default, a field can be at most 16k in length and
+there can be at most 4096 fields per line. Change the constants
+.B BUFSIZE
+and
+.B FIELDSIZE
+in the source if these limits are too small. The number of lines is not 
+restricted by design, but by the size of the C size_t type. On DOS systems
+an overflow will occur at some time between line 8193 and 16384. You can 
+fiddle with the
+.B LINESIZE
+constant to change the point where this will happen.
+.SH AUTHOR
+Peter Holzer (hp@vmars.tuwien.ac.at)
