@@ -1,12 +1,15 @@
 char	table_c_rcs_id [] =
-	"$Id: table.c,v 1.2 2000-02-28 14:35:22 hjp Exp $";
+	"$Id: table.c,v 1.3 2006-02-06 15:16:08 hjp Exp $";
 /*
  * Tabulate files.
  *
  *	$Log: table.c,v $
- *	Revision 1.2  2000-02-28 14:35:22  hjp
- *	Added environment variable TABLE_DELIMITER
+ *	Revision 1.3  2006-02-06 15:16:08  hjp
+ *	Increased max. field length and print nice error message if it is exceeded.
  *
+ *	Revision 1.2  2000/02/28 14:35:22  hjp
+ *	Added environment variable TABLE_DELIMITER
+ *	
  *	Revision 1.1.1.1  1998/08/10 23:43:10  hjp
  *	CVS repository was lost. This seems to be version 1.7 from 1994
  *	(probably with minor changes).
@@ -54,7 +57,7 @@ char	table_c_rcs_id [] =
 #include <ant/alloc.h>
 #endif
 
-#define BUFSIZE		0x4000U
+#define BUFSIZE		0x8000U
 #define FIELDSIZE	0x1000U
 #define LINESIZE        0x1000U
 #define WIDTHSIZE	16
@@ -218,6 +221,14 @@ void table (fp)
 			}
 			fieldstart = buffer;
                 }
+                if (curchar >= buffer + BUFSIZE) {
+		    fprintf(stderr,
+		    	    "field longer than %lu bytes in line %lu.\n"
+			    "Please recompile with larger value for BUFSIZE.\n",
+			    (unsigned long) BUFSIZE,
+			    (unsigned long) (curline - lines));
+		    exit(1);
+		}
 
 		if (c == delimiter || c == '\n') {
 			/* terminate field	*/
